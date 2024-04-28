@@ -1,21 +1,32 @@
 <template>
     <div class="box">
-
+        <van-button type="primary" />
     </div>
 </template>
 
 <script>
-    export default {
-        
-    }
+
+export default {
+    data() {
+        return {
+        }
+    },
+
+    methods: {
+    
+    },
+
+}
 </script>
 
 <style lang="scss" scoped>
-
-.box{
+.box {
     width: 100vw;
-    height: 20vh;
-    background: tomato;
+    height: 100vh;
+    background: rgb(246,248,251);
 }
 
+::v-deep .van-search__content{
+    background: white;
+}
 </style>

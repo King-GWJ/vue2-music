@@ -36,6 +36,7 @@
 
 <template>
     <div class="home">
+        
         <main class="home-main">
             <keep-alive>
                 <router-view />
@@ -64,7 +65,7 @@
             width: 100%;
             line-height: 49px;
             &.router-link-exact-active {
-
+                
             }
 
             &.router-link-active{
