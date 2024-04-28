@@ -1,24 +1,36 @@
 <script>
     export default {
-        components: {},
+        components: {
+
+        },
 
         data() {
             return {};
         },
 
-        computed: {},
+        computed: {
 
-        watch: {},
+        },
 
-        methods: {},
+        watch: {
+
+        },
+
+        methods: {
+
+        },
 
         beforeCreate() {},
 
-        created() {},
+        created() {
+
+        },
 
         beforeMount() {},
 
-        mounted() {},
+        mounted() {
+
+        },
 
         beforeUpdate() {},
 
@@ -36,6 +48,7 @@
 
 <template>
     <div class="home">
+        
         <main class="home-main">
             <keep-alive>
                 <router-view />
@@ -64,7 +77,7 @@
             width: 100%;
             line-height: 49px;
             &.router-link-exact-active {
-
+                
             }
 
             &.router-link-active{

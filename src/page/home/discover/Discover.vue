@@ -1,4 +1,6 @@
 <script>
+    import {bannerApi} from "@/base/api/index";
+
     export default {
         components: {},
 
@@ -10,7 +12,9 @@
 
         watch: {},
 
-        methods: {},
+        methods: {
+
+        },
 
         beforeCreate() {},
 
@@ -18,7 +22,13 @@
 
         beforeMount() {},
 
-        mounted() {},
+        mounted() {
+            bannerApi().then(response =>{
+                console.log("ggg",response)
+            }).catch(err => {
+                console.log("ggg:",err)
+            })
+        },
 
         beforeUpdate() {},
 
