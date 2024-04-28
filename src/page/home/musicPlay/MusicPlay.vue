@@ -6,7 +6,9 @@
         data() {
             return {
                 add: [1,2,3,4,5,6,7,8,9],
-                float: true
+                float: true, // 图片是否旋转
+                xinxin: true, // 是否收藏，默认收藏
+
             };
         },
 
@@ -67,16 +69,16 @@
             <div class="name">
                 <div class="nameTitle">
                     <p>冬天的密码</p>
-                    <p>vip</p>
+                    <p class="nameVip">vip</p>
                 </div>
                 <div class="nameText">
                     <p>周冬雨</p>
-                    <p>关注</p>
-                    <van-button type="primary">按钮</van-button>
+                    <p class="nameVip">关注</p>
                 </div>
             </div>
-            <div class="xin">
-                <img src="../../../icon/like.png" alt="">
+            <div class="xin" @click="xinxin = !xinxin">
+                <img v-if="xinxin" src="../../../icon/icon-collect.png" alt="">
+                <img v-else="xinxin" src="../../../icon/like.png" alt="">
             </div>
             <div class="pinlun">
                 <img src="../../../icon/icon-pinlun.png" alt="">
@@ -86,20 +88,20 @@
             <div v-for="(item,index) in add" :key="index">{{ item }}</div>
         </div>
         <div class="musicBtn">
-            <div>
+            <div class="btn1">
                 <img src="../../../icon/icon-light.png" alt="">
             </div>
-            <div>
+            <div class="btn2">
                 <img src="../../../icon/icon-shangyishou.png" alt="">
             </div>
-            <div>
+            <div class="btn3">
                 <img src="../../../icon/incon-blackbofang.png" alt="">
             </div>
-            <div>
+            <div class="btn4">
                 <img src="../../../icon/icon-next.png" alt="">
             </div>
-            <div>
-                <img src="../../../icon/icon-fenxiang2.png" alt="">
+            <div class="btn5">
+                <img src="../../../icon/icon-liebiao.png" alt="">
             </div>
         </div>
         <div class="musicSettings">
@@ -123,6 +125,7 @@
     display: flex;
     flex-direction: column;
     padding: 0 10px;
+    background-color: #4B4B4B;
     .musicHead{
         width: 100%;
         height: 40px;
@@ -224,9 +227,41 @@
             width: 60%;
             .nameTitle{
                 display: flex;
+                color: #a4a4a4;
+                font-size: 20px;
+                align-items: center;
+
+                .nameVip{
+                    color: #bfbfbf;
+                    background-color: #444444;
+                    border-radius: 4px;
+                    padding:0px 6px;
+                    // font-weight: normal;
+                    font-size: 16px;
+                    margin-left: 6px;
+                    display: flex;
+                    align-items: center;
+                    height: 20px;
+                }
             }
             .nameText{
-                display: flex
+                display: flex;
+                margin-top: 8px;
+                color: #888888;
+                font-weight: bold;
+                font-size: 16px;
+                align-items: center;
+                .nameVip{
+                    color: #bfbfbf;
+                    background-color: #444444;
+                    border-radius: 50px;
+                    padding: 2px 8px;
+                    margin-left:6px;
+                    // font-weight: normal;
+                    height: 20px;
+                    display: flex;
+                    align-items: center;
+                }
             }
         }
         .xin{
@@ -268,24 +303,41 @@
         justify-content:space-between;
         align-items: center;
         >div{
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             overflow: hidden;
             >img{
                 width: 100%;
                 height: 100%;
             }
         }
+        .btn1{
+            width: 30px;
+            height: 30px;
+        }
+        .btn5{
+            width: 30px;
+            height: 30px;
+        }
+        .btn4,.btn2{
+            width: 40px;
+            height: 40px;
+        }
+        .btn3{
+            width: 50px;
+            height: 50px;
+        }
     }
     .musicSettings{
+        padding: 30px 0;
         width: 100%;
         height: 40px;
         display: flex;
         align-items: center;
         justify-content: space-around;
         >div{
-            width: 30px;
-            height: 30px;
+            width: 20px;
+            height: 20px;
             >img{
                 width: 100%;
                 height: 100%;
