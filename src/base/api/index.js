@@ -4,7 +4,7 @@ import {request} from "../request/axiosRequest";
 export const searchSuggestApi = (val) => {
     return request({
         url: '/search/suggest',
-        data: {
+        params: {
             keywords: val
         }
     })
@@ -14,7 +14,7 @@ export const searchSuggestApi = (val) => {
 export const searchApi = (val, offset) => {
     return request({
         url: '/search',
-        data: {
+        params: {
             keywords: val,
             offset: offset
         }
@@ -34,7 +34,7 @@ export const emailLoginApi = (email, password) => {
     return request({
         url: '/login',
         method: 'GET',
-        data: {
+        params: {
             email,
             password
         }
@@ -46,7 +46,7 @@ export const phoneLoginApi = (phone, password) => {
     return request({
         url: '/login/cellphone',
         method: 'GET',
-        data: {
+        params: {
             phone,
             password
         }
@@ -58,7 +58,7 @@ export const qrKeyApi = () => {
     return request({
         url: '/login/qr/key',
         method: 'GET',
-        data: {
+        params: {
             timestamp: Date.now()
         }
     })
@@ -69,7 +69,7 @@ export const qrCreateApi = (key) => {
     return request({
         url: '/login/qr/create?qrimg',
         method: 'GET',
-        data: {
+        params: {
             key,
             timestamp: Date.now()
         }
@@ -81,7 +81,7 @@ export const qrCheckApi = (key) => {
     return request({
         url: '/login/qr/check',
         method: 'GET',
-        data: {
+        params: {
             key,
             timestamp: Date.now()
         }
@@ -116,7 +116,7 @@ export const userDetailApi = (uid) => {
     return request({
         url: '/user/detail',
         method: 'GET',
-        data: {
+        params: {
             uid,
         }
     })
@@ -126,7 +126,7 @@ export const userPlayListApi = (uid) => {
     return request({
         url: '/user/playlist',
         method: 'GET',
-        data: {
+        params: {
             uid,
             timestamp: Date.now()
         }
@@ -144,7 +144,7 @@ export const bannerApi = () => {
 export const voiceApi = (val) => {
     return request({
         url: '/voicelist/search',
-        data: {
+        params: {
             limit: val.limit,
             offset: val.offset
         }
@@ -155,7 +155,7 @@ export const voiceApi = (val) => {
 export const valbumApi = (val) => {
     return request({
         url: '/album/list',
-        data: {
+        params: {
             limit: val.limit,
             offset: val.offset
         }
@@ -173,7 +173,7 @@ export const toplistApi = () => {
 export const personalizedApi = (num) => {
     return request({
         url: '/personalized',
-        data: {
+        params: {
             limit: num
         }
     })
@@ -183,7 +183,7 @@ export const personalizedApi = (num) => {
 export const newsongApi = (num) => {
     return request({
         url: '/personalized/newsong',
-        data: {
+        params: {
             limit: num
         }
     })
@@ -208,7 +208,7 @@ export const hotApi = () => {
 export const trackAllApi = (id, limit, offset) => {
     return request({
         url: '/playlist/track/all',
-        data: {
+        params: {
             id: id,
             limit: limit,
             offset: offset
@@ -235,7 +235,7 @@ export const djBannerApi = () => {
 export const personalizeApi = (val) => {
     return request({
         url: '/dj/personalize/recommend',
-        data: {
+        params: {
             limit: val
         }
     })
@@ -244,7 +244,7 @@ export const personalizeApi = (val) => {
 export const SongdetailApi = (id, s = 10) => {
     return request({
         url: '/playlist/detail',
-        data: {
+        params: {
             id,
             s
         }
@@ -255,7 +255,7 @@ export const SongdetailApi = (id, s = 10) => {
 export const songDetailApi = (ids) => {
     return request({
         url: '/song/detail',
-        data: {
+        params: {
             ids
         }
     })
@@ -265,7 +265,7 @@ export const songDetailApi = (ids) => {
 export const lyricApi = (id) => {
     return request({
         url: '/lyric',
-        data: {
+        params: {
             id
         }
     })
@@ -275,7 +275,7 @@ export const lyricApi = (id) => {
 export const commentApi = (type, id) => {
     return request({
         url: `/comment/${type}`,
-        data: {
+        params: {
             id
         }
     })
@@ -285,7 +285,7 @@ export const commentApi = (type, id) => {
 export const songUrlApi = (id, level) => {
     return request({
         url: '/song/url/v1',
-        data: {
+        params: {
             id: id,
             level: level
         }
@@ -296,7 +296,7 @@ export const songUrlApi = (id, level) => {
 export const userFollowApi = (val) => {
     return request({
         url: '/user/follows',
-        data: {
+        params: {
             uid: val.uid,
         }
     })
@@ -306,7 +306,7 @@ export const userFollowApi = (val) => {
 export const userFollowedsApi = (val) => {
     return request({
         url: '/user/followeds',
-        data: {
+        params: {
             uid: val.uid,
             limit: val.limit || 30
         }
@@ -318,7 +318,7 @@ export const userFollowedsApi = (val) => {
 export const playListChange = (op, pid, tracks) => {
     return request({
         url: '/playlist/tracks',
-        data: {
+        params: {
             op,
             pid,
             tracks,
@@ -331,7 +331,7 @@ export const playListChange = (op, pid, tracks) => {
 export const getalbumApi = (id) => {
     return request({
         url: '/album',
-        data: {
+        params: {
             id: id
         }
     })
@@ -341,7 +341,7 @@ export const getalbumApi = (id) => {
 export const getashareApi = (id) => {
     return request({
         url: '/share/resource',
-        data: {
+        params: {
             id: id
         }
     })
@@ -352,7 +352,7 @@ export const mvDetailApi = (id) => {
     return request({
         url: '/mv/url',
         method: 'POST',
-        data: {
+        params: {
             id: id
         }
     })
@@ -362,7 +362,7 @@ export const mvUrlApi = (id) => {
     return request({
         url: '/mv/detail',
         method: 'POST',
-        data: {
+        params: {
             mvid: id
         }
     })
@@ -372,7 +372,7 @@ export const mvInfoApi = (id) => {
     return request({
         url: '/mv/detail/info',
         method: 'POST',
-        data: {
+        params: {
             mvid: id
         }
     })
@@ -389,7 +389,7 @@ export const mvrecommendApi = (id) => {
 export const newCommentApi = (id, type, sortType) => {
     return request({
         url: '/comment/new',
-        data: {
+        params: {
             id,
             type,
             sortType,
@@ -402,7 +402,7 @@ export const newCommentApi = (id, type, sortType) => {
 export const goodApi = (id, cid, t, type) => {
     return request({
         url: '/comment/like',
-        data: {
+        params: {
             id,
             cid,
             t,
@@ -416,7 +416,7 @@ export const goodApi = (id, cid, t, type) => {
 export const sendCommentApi = (t, type, id, content, commentId) => {
     return request({
         url: '/comment',
-        data: {
+        params: {
             t,
             type,
             id,
@@ -430,7 +430,7 @@ export const sendCommentApi = (t, type, id, content, commentId) => {
 export const floorCommentApi = (parentCommentId, id, type) => {
     return request({
         url: '/comment/floor',
-        data: {
+        params: {
             parentCommentId,
             id,
             type
