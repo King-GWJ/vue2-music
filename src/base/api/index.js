@@ -1,11 +1,11 @@
 import {request} from "../request/axiosRequest";
 
 //搜索建议接口
-export const searchSuggestApi = (val) => {
+export const searchSuggestApi = (keywords) => {
     return request({
         url: '/search/suggest',
         params: {
-            keywords: val
+            keywords
         }
     })
 }
