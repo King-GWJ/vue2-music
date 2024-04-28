@@ -1,24 +1,36 @@
 <script>
     export default {
-        components: {},
+        components: {
+
+        },
 
         data() {
             return {};
         },
 
-        computed: {},
+        computed: {
 
-        watch: {},
+        },
 
-        methods: {},
+        watch: {
+
+        },
+
+        methods: {
+
+        },
 
         beforeCreate() {},
 
-        created() {},
+        created() {
+
+        },
 
         beforeMount() {},
 
-        mounted() {},
+        mounted() {
+
+        },
 
         beforeUpdate() {},
 
