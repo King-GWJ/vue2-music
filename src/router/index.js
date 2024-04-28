@@ -6,6 +6,7 @@ import Blogs from "@/page/home/blogs/Blogs.vue";
 import Mine from "@/page/home/mine/Mine.vue";
 import MusicPlay from "@/page/home/musicPlay/MusicPlay.vue";
 import Community from "@/page/home/community/Community.vue";
+import Search from "@/page/search/Search.vue"
 
 Vue.use(VueRouter)
 
@@ -65,6 +66,11 @@ const routes = [
                 },
             }
         ]
+    },
+    {
+        path:'/search',
+        name:'search',
+        component: Search
     }
 ]
 
