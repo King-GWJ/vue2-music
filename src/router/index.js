@@ -1,29 +1,77 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Home from '@/page/home/Home.vue'
+import Discover from "@/page/home/discover/Discover.vue";
+import Blogs from "@/page/home/blogs/Blogs.vue";
+import Mine from "@/page/home/mine/Mine.vue";
+import MusicPlay from "@/page/home/musicPlay/MusicPlay.vue";
+import Community from "@/page/home/community/Community.vue";
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    {
+        path: '/',
+        // 重定向
+        redirect: '/home'
+    },
+    {
+        // 地址为 /home 时，页面展示 Home 组件
+        path: '/home',
+        name: 'home',
+        component: Home,
+        redirect: '/home/discover',
+        // 配置子路由，此处路由只在home页面中展示
+        children: [
+            {
+                path: '/home/discover',
+                name: 'discover',
+                component: Discover,
+                meta: {
+                    title: '发现'
+                },
+            },
+            {
+                path: '/home/blogs',
+                name: 'blogs',
+                component: Blogs,
+                meta: {
+                    title: '博客'
+                },
+            },
+            {
+                path: '/home/musicPlay',
+                name: 'musicPlay',
+                component: MusicPlay,
+                meta: {
+                    title: '漫游'
+                },
+            },
+
+            {
+                path: '/home/community',
+                name: 'community',
+                component: Community,
+                meta: {
+                    title: '社区'
+                },
+            },
+            {
+                path: '/home/mine',
+                name: 'mine',
+                component: Mine,
+                meta: {
+                    title: '我的'
+                },
+            }
+        ]
+    }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router
