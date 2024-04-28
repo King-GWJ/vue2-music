@@ -45,7 +45,7 @@
 </script>
 
 <template>
-    <div @click="onSearch('提示框')">
+    <div>
         发现
     </div>
 </template>
