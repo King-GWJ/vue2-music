@@ -73,8 +73,9 @@
             flex: 1;
             //font-weight: bold;
             color: #797d82;
+            font-size: 0.267rem;
             text-align: center;
-            width: 100%;
+            width: 100vw;
             line-height: 49px;
             &.router-link-exact-active {
                 
@@ -88,21 +89,20 @@
 </style>
 <style scoped lang="scss">
     .home {
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         display: flex;
         flex-direction: column;
 
         .home-main {
             flex: 1;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
             overflow: hidden;
             overflow-y: scroll;
             display: flex;
         }
         .home-footer {
-            height: 49px;
+            height: 1.307rem;
             border-top: 1px solid #ededed;
         }
 
