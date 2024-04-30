@@ -58,11 +58,13 @@ export default {
                 })
             }, 200);
         },
-        async getResultList(val=this.value) {
+        getResultList(val=this.value) {
             this.value=val
-            const res = await searchApi(this.value)
-            this.suggestList=[]
+            searchApi(this.value).then(res=>{
+                this.suggestList=[]
             this.resultList=res.result.songs
+            })
+            
         },
         goPlay(id) {
             console.log(id)
