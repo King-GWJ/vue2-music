@@ -19,16 +19,22 @@
     }
 
     html, body {
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
     }
+
+    svg{
+        width: 1rem;
+        height: 1rem;
+    }
+
 
 </style>
 
 <style lang="scss" scoped>
     #app {
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         display: flex;
         flex-direction: column;
     }
