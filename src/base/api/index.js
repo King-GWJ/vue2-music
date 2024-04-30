@@ -169,6 +169,21 @@ export const toplistApi = () => {
     })
 }
 
+
+// 获取不同榜单的数据
+export const anyToplistApi = (idx) => {
+	return request({
+		url: '/top/list',
+		data: {
+			idx
+		}
+	})
+}
+
+
+
+
+
 //推荐歌单
 export const personalizedApi = (num) => {
     return request({

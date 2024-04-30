@@ -1,12 +1,16 @@
 <script>
     
     import Handpick from './Handpick.vue'
-    import { mapMutations } from "vuex";
-    import {  toplistApi }  from '../../../base/api/index';
-
+    import Vip from  './VIP.vue'
+    import { createLogger, mapMutations } from "vuex";
+    import {  toplistApi ,anyToplistApi}  from '../../../base/api/index';
+   
 
     export default {
-        components: {},
+        components: {
+            "Handpick":Handpick,
+            "Vip":Vip
+        },
 
         data() {
             return {
@@ -14,7 +18,9 @@
                 navlist:['精选','排行榜','VIP','歌单','SunoAl','助眠','欧美','原创','学习','经典','粤语','说唱','国风','电音','运动','民谣','K-Pop','摇滚','R&B','全球','R&B','全球','儿歌','HiFi','爵士','古典','ACG','DJ'],
                 CurIndex:0, //头部当前下标
                 navCurIndex:0,//nav当前下标
-                songList:[]
+                songList:[] , //顶部榜单三个
+                everyList:[],//各类榜单数据
+                listDetail:[], //榜单详情
             };
         },
 
@@ -29,8 +35,8 @@
             //点击头部切换分页
             changeTab(index){
                 this.CurIndex=index
+                console.log(this.CurIndex)
                 this.$refs.swip.swipeTo(index)
-                // this.$store.dispatch('fetchAndTrackAllApi', id);
 	        },
             //点击nav切换子页面
             changeChild(index){
@@ -39,7 +45,6 @@
             },
             //子页面切换，nav响应切换
             changeChildren(e){
-                console.log(e)
                 this.navCurIndex=e
             },
          
@@ -56,10 +61,20 @@
         beforeMount() {},
 
         mounted() {
-            toplistApi(id).then(response =>{
-                console.log("ggg",response)
+            // songList:[] , //榜单数据
+            // everyList:[],//各类榜单数据
+            //     listDetail:[], //榜单详情
+            toplistApi ().then(res =>{
+                console.log(res)
+                this.listDetail=res.list.filter(v=>v.tags.length>0)
+                this.everyList=res.list.filter(v=>v.tags.length===0)
+                this.songList=this.everyList.splice(0,3)
+                console.log(this.listDetail)
+                console.log(this.everyList)
+                console.log(this.songList)
+
             }).catch(err => {
-                console.log("ggg:",err)
+                console.log("222:",err)
             })
         },
 
@@ -83,7 +98,7 @@
             <div class="header">
                 <div class="img libiao"><img src="../../../icon/lb.png" alt=""></div>
                 <div class="text">
-                    <p :class="{active:CurIndex===index}" @click="changeTab(index)"  v-for="(item,index) in list" :key="item">{{ item }}</p>
+                    <p :class="{active:CurIndex===index}" @click="changeTab(index)"  v-for="(item,index) in list" :key="index">{{ item }}</p>
                 </div>
                 <div class="img search"><img src="../../../icon/search.png" alt=""></div>
             </div>
@@ -93,21 +108,23 @@
                 <van-swipe class="my-swipe" ref="swip" :show-indicators="false">
                     <van-swipe-item >
                         <header> 
-                          <p :class="{active:navCurIndex===index}"  @click="changeChild(index)"  v-for="(item,index) in navlist" :key="item">{{ item }}</p>
+                          <p :class="{active:navCurIndex===index}"  @click="changeChild(index)"  v-for="(item,index) in navlist" :key="index">{{ item }}</p>
                         </header>
                         <!--  -->
                         <van-swipe class="my-swipe" ref="child" @change="changeChildren"  :show-indicators="false">
                             <!-- 精选 -->
-                            <!-- <van-swipe-item>
-                               111 handpick
-                            </van-swipe-item> -->
-                            <!-- 排行榜 -->
-                            <van-swipe-item  >
+                            <van-swipe-item>
+                               <Handpick/>
+                            </van-swipe-item>
+                            <!-- 排行榜 -->  
+                            <van-swipe-item>
                                 <div class="center">
                                     <div class="recommend">
                                         <h4>推荐榜单</h4>
                                         <div class="list">
-                                            <div class="list-item"></div>
+                                            <div class="list-item"  v-for="(item,index) in songList" :key="index">
+                                                <img :src="item.coverImgUrl" alt="">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="official">
@@ -116,9 +133,9 @@
                                             <h4>官方榜</h4>
                                         </div>
                                         <div class="offlist">
-                                             <div class="offitem">
+                                             <div class="offitem" v-for="(item,index) in listDetail" :key="index">
                                                 <div class="title">
-                                                    <h3>飙升榜</h3>
+                                                    <h3>{{item.name}}</h3>
                                                     <div class="update">刚刚更新</div>
                                                 </div>
                                                 <div class="hotList">
@@ -151,7 +168,7 @@
                             </van-swipe-item>
                             <!-- vip -->
                             <van-swipe-item>
-
+                                <Vip/>
                             </van-swipe-item>
                             <!-- 歌单 -->
                             <van-swipe-item>4</van-swipe-item>
@@ -192,6 +209,7 @@
     .muen{
         display: flex;
         .header{
+            width:100%;
             height:45px;
             display: flex;
             align-items: center;
@@ -235,7 +253,6 @@
                 height:100%;
                 overflow-y: auto;
                 .van-swipe-item {
-                    width:100%;
                     height:100%;
                     background-color: #e1f3a3;
                     display: flex;
@@ -265,21 +282,23 @@
                             flex-direction: column;
                             overflow-y:auto;
                             .recommend{
-                                height:20%;
+                                height:30%;
                                 margin-top: 15px;
                                 display: flex;
                                 flex-direction: column;
                                 .list{
                                     margin-top:10px;
+                                    overflow-x: auto;
                                     display: flex;
                                     .list-item{
                                         width:100px;
                                         height:100px;
-                                        background:#e1f3a3;
-                                        border-radius: 15px;
+
+                                        margin-right:15px;
                                         img{
                                             width:100%;
                                             height:100%;
+                                            border-radius: 15px;
                                         }
                                     }
                                 }

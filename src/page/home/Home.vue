@@ -76,10 +76,6 @@
             text-align: center;
             width: 100%;
             line-height: 49px;
-            &.router-link-exact-active {
-                
-            }
-
             &.router-link-active{
                 color: #c5483c;
             }
