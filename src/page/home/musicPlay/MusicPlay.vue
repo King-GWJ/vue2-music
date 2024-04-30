@@ -78,7 +78,7 @@
             </div>
             <div class="xin" @click="xinxin = !xinxin">
                 <img v-if="xinxin" src="../../../icon/icon-collect.png" alt="">
-                <img v-else="xinxin" src="../../../icon/like.png" alt="">
+                <img v-else src="../../../icon/like.png" alt="">
             </div>
             <div class="pinlun">
                 <img src="../../../icon/icon-pinlun.png" alt="">

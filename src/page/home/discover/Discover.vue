@@ -1,5 +1,9 @@
 <script>
-    import {bannerApi} from "@/base/api/index";
+    
+    import Handpick from './Handpick.vue'
+    import { mapMutations } from "vuex";
+    import {  toplistApi }  from '../../../base/api/index';
+
 
     export default {
         components: {},
@@ -10,27 +14,23 @@
                 navlist:['精选','排行榜','VIP','歌单','SunoAl','助眠','欧美','原创','学习','经典','粤语','说唱','国风','电音','运动','民谣','K-Pop','摇滚','R&B','全球','R&B','全球','儿歌','HiFi','爵士','古典','ACG','DJ'],
                 CurIndex:0, //头部当前下标
                 navCurIndex:0,//nav当前下标
+                songList:[]
             };
         },
 
         computed: {
            
+
         },
 
         watch: {},
 
         methods: {
-
-
-            //调接口
-
             //点击头部切换分页
             changeTab(index){
-                console.log(index)
                 this.CurIndex=index
-                console.log(this.CurIndex,'cur')
-                console.log(this.$refs.swip)
                 this.$refs.swip.swipeTo(index)
+                // this.$store.dispatch('fetchAndTrackAllApi', id);
 	        },
             //点击nav切换子页面
             changeChild(index){
@@ -41,9 +41,13 @@
             changeChildren(e){
                 console.log(e)
                 this.navCurIndex=e
-            }
+            },
+         
 
-        },
+         },
+            
+           
+
 
         beforeCreate() {},
 
@@ -52,7 +56,7 @@
         beforeMount() {},
 
         mounted() {
-            bannerApi().then(response =>{
+            toplistApi(id).then(response =>{
                 console.log("ggg",response)
             }).catch(err => {
                 console.log("ggg:",err)
@@ -98,7 +102,7 @@
                                111 handpick
                             </van-swipe-item> -->
                             <!-- 排行榜 -->
-                            <van-swipe-item >
+                            <van-swipe-item  >
                                 <div class="center">
                                     <div class="recommend">
                                         <h4>推荐榜单</h4>
@@ -187,7 +191,6 @@
     }
     .muen{
         display: flex;
-        flex-direction:column;
         .header{
             height:45px;
             display: flex;
@@ -223,12 +226,14 @@
     }
     .content{
         flex:1;
+        overflow-y:auto;
         .swiper{
             width:100%;
             height:100%;
             .my-swipe{
                 width:100%;
                 height:100%;
+                overflow-y: auto;
                 .van-swipe-item {
                     width:100%;
                     height:100%;
