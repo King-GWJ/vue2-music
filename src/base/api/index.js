@@ -192,7 +192,7 @@ export const newsongApi = (num) => {
 //每日推荐歌曲
 export const songsApi = () => {
     return request({
-        url: '/recommend/songs',
+        url: '/recommend/songs'
     })
 }
 
@@ -220,14 +220,14 @@ export const trackAllApi = (id, limit, offset) => {
 // 最新专辑
 export const newestApi = () => {
     return request({
-        url: '/album/newest',
+        url: '/album/newest'
     })
 }
 
 // 电台banner
 export const djBannerApi = () => {
     return request({
-        url: '/dj/banner',
+        url: '/dj/banner'
     })
 }
 
