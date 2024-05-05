@@ -7,6 +7,7 @@ import Mine from "@/page/home/mine/Mine.vue";
 import MusicPlay from "@/page/home/musicPlay/MusicPlay.vue";
 import Community from "@/page/home/community/Community.vue";
 import Search from "@/page/search/Search.vue"
+import SongList from "@/page/home/songList/SongList.vue"
 
 Vue.use(VueRouter)
 
@@ -64,6 +65,11 @@ const routes = [
                 meta: {
                     title: '我的'
                 },
+            },
+            {
+                path: '/path/songlist',
+                name: 'songlist',
+                component: SongList,
             }
         ]
     },

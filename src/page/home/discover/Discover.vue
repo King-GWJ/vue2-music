@@ -2,8 +2,7 @@
     
     import Handpick from './Handpick.vue'
     import Vip from  './VIP.vue'
-    import { createLogger, mapMutations } from "vuex";
-    import {  toplistApi ,anyToplistApi}  from '../../../base/api/index';
+    import { toplistApi }  from '../../../base/api/index';
    
 
     export default {
@@ -25,7 +24,6 @@
         },
 
         computed: {
-           
 
         },
 
@@ -34,20 +32,35 @@
         methods: {
             //点击头部切换分页
             changeTab(index){
+                if(index > 1){
+                    this.$refs.text.scrollTo({left: this.$refs.text.childNodes[index].offsetLeft - this.$refs.text.childNodes[1].offsetLeft, behavior: 'smooth'})
+                }else{
+                this.$refs.text.scrollTo({left:0, behavior: 'smooth'})
+                }
                 this.CurIndex=index
-                console.log(this.CurIndex)
-                this.$refs.swip.swipeTo(index)
+                this.$refs.swiperA.swipeTo(index)
 	        },
             //点击nav切换子页面
             changeChild(index){
+                if(index > 2){
+                    this.$refs.header.scrollTo({left: this.$refs.header.childNodes[index].offsetLeft - this.$refs.header.childNodes[2].offsetLeft, behavior: 'smooth'})
+                }else{
+                this.$refs.header.scrollTo({left:0, behavior: 'smooth'})
+                }
                 this.navCurIndex=index
-                this.$refs.child.swipeTo(index)
+                this.$refs.swiperB.swipeTo(index)
             },
             //子页面切换，nav响应切换
             changeChildren(e){
-                this.navCurIndex=e
+                this.changeChild(e)
+                this.$store.commit('leaderboard')
             },
-         
+            // 跳转歌曲详情
+            toggle(id){
+                localStorage.setItem('typeId', id)
+                this.$router.push('/path/songlist');
+                this.$store.commit('leaderboard',id)
+            }
 
          },
             
@@ -56,26 +69,19 @@
 
         beforeCreate() {},
 
-        created() {},
+        created() {
+            toplistApi().then(res => {
+                if(res.code === 200){
+                    this.everyList = res.list.filter(item => item.tags.length > 0)
+                    this.listDetail = res.list.filter(item => item.tags.length === 0)
+                    this.songList = this.everyList.splice(0,3)
+                }
+            })
+        },
 
         beforeMount() {},
 
         mounted() {
-            // songList:[] , //榜单数据
-            // everyList:[],//各类榜单数据
-            //     listDetail:[], //榜单详情
-            toplistApi ().then(res =>{
-                console.log(res)
-                this.listDetail=res.list.filter(v=>v.tags.length>0)
-                this.everyList=res.list.filter(v=>v.tags.length===0)
-                this.songList=this.everyList.splice(0,3)
-                console.log(this.listDetail)
-                console.log(this.everyList)
-                console.log(this.songList)
-
-            }).catch(err => {
-                console.log("222:",err)
-            })
         },
 
         beforeUpdate() {},
@@ -97,97 +103,109 @@
         <div class="muen">
             <div class="header">
                 <div class="img libiao"><img src="../../../icon/lb.png" alt=""></div>
-                <div class="text">
+                <div class="text" ref="text">
                     <p :class="{active:CurIndex===index}" @click="changeTab(index)"  v-for="(item,index) in list" :key="index">{{ item }}</p>
                 </div>
                 <div class="img search"><img src="../../../icon/search.png" alt=""></div>
             </div>
         </div>
-        <div class="content">
-            <div class="swiper">
-                <van-swipe class="my-swipe" ref="swip" :show-indicators="false">
-                    <van-swipe-item >
-                        <header> 
-                          <p :class="{active:navCurIndex===index}"  @click="changeChild(index)"  v-for="(item,index) in navlist" :key="index">{{ item }}</p>
-                        </header>
-                        <!--  -->
-                        <van-swipe class="my-swipe" ref="child" @change="changeChildren"  :show-indicators="false">
-                            <!-- 精选 -->
-                            <van-swipe-item>
-                               <Handpick/>
-                            </van-swipe-item>
-                            <!-- 排行榜 -->  
-                            <van-swipe-item>
-                                <div class="center">
-                                    <div class="recommend">
-                                        <h4>推荐榜单</h4>
-                                        <div class="list">
-                                            <div class="list-item"  v-for="(item,index) in songList" :key="index">
-                                                <img :src="item.coverImgUrl" alt="">
-                                            </div>
+        <van-swipe class="swiperA" :show-indicators="false" ref="swiperA">
+            <van-swipe-item>
+                <header ref="header">
+                    <p  
+                        :class="{active:navCurIndex===index}" 
+                        v-for="(item,index) in navlist" 
+                        :key="index"
+                        @click="changeChild(index)"
+                    >{{ item }}</p>
+                </header>
+                    <van-swipe class="swiperB" @change="changeChildren" :show-indicators="false" ref="swiperB">
+                    <van-swipe-item>精选</van-swipe-item>
+                    <van-swipe-item class="music">
+                        <p class="recommended">榜单推荐</p>
+                        <div class="img">
+                            <div 
+                                v-for="(item,index) in songList" 
+                                :key="index"
+                                @click="toggle(item.id)"
+                                ><img :src="item.coverImgUrl" alt="">
+                            </div>
+                        </div>
+                        <div class="authority">
+                            <div><img src="../../../icon/icon-wangyiyun.png" alt=""></div>
+                            <p>官方榜</p>
+                        </div>
+                        <div class="list" 
+                            v-for="(item,index) in listDetail" 
+                            :key="index"
+                            @click="toggle(item.id)"
+                            ><div class="name">
+                                <p class="nameA">{{ item.name }}</p>
+                                <p class="nameB">{{ item.updateFrequency }}</p>
+                            </div>
+                            <div class="text">
+                                <div class="textImg">
+                                    <img :src="item.coverImgUrl" alt="">
+                                </div>
+                                <div class="textList">
+                                    <div>
+                                        <p class="p1">1</p>
+                                        <div class="p">
+                                            <p class="p2">如果可以</p>
+                                            <p class="p3">-</p>
+                                            <p class="p3">理查德</p>
+                                        </div>
+                                        <div>
+                                            <p class="type">新</p>
                                         </div>
                                     </div>
-                                    <div class="official">
-                                        <div class="offtitle">
-                                            <img src="../../../icon/icon-wangyiyun.png" alt="">
-                                            <h4>官方榜</h4>
+                                    <div>
+                                        <p class="p1">2</p>
+                                        <div class="p">
+                                            <p class="p2">如果可以</p>
+                                            <p class="p3">-</p>
+                                            <p class="p3">理查德</p>
                                         </div>
-                                        <div class="offlist">
-                                             <div class="offitem" v-for="(item,index) in listDetail" :key="index">
-                                                <div class="title">
-                                                    <h3>{{item.name}}</h3>
-                                                    <div class="update">刚刚更新</div>
-                                                </div>
-                                                <div class="hotList">
-                                                    <img src="" alt="">
-                                                    <ul>
-                                                        <li>
-                                                            <div class="name"></div>
-                                                            <div class="differ">新</div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                             </div>
+                                        <div>
+                                            <p class="type">新</p>
                                         </div>
                                     </div>
-                                    <!-- 精选 -->
-                                    <div class="selected">
-                                        <h3>精选榜</h3>
-                                        <div class="selectItem">
-                                            <div class="every"></div>
+                                    <div>
+                                        <p class="p1">3</p>
+                                        <div class="p">
+                                            <p class="p2">如果可以</p>
+                                            <p class="p3">-</p>
+                                            <p class="p3">理查德</p>
                                         </div>
-                                    </div>
-                                    <!-- 曲风 -->
-                                    <div class="selected">
-                                        <h3>曲风榜<div>更多</div></h3>
-                                        <div class="selectItem">
-                                            <div class="every"></div>
+                                        <div>
+                                            <p class="type">新</p>
                                         </div>
                                     </div>
                                 </div>
-                            </van-swipe-item>
-                            <!-- vip -->
-                            <van-swipe-item>
-                                <Vip/>
-                            </van-swipe-item>
-                            <!-- 歌单 -->
-                            <van-swipe-item>4</van-swipe-item>
-                            <!-- sun -->
-                            <van-swipe-item>4</van-swipe-item>
-                            <!-- 歌单 -->
-                            <van-swipe-item>4</van-swipe-item>
-                            <!-- 歌单 -->
-                            <van-swipe-item>4</van-swipe-item>
-                        </van-swipe>
-                        <!--  -->
+                            </div>
+                        </div>
+                        <p class="recommended">精选榜</p>
+                        <div class="winnow" >
+                            <div 
+                                v-for="(item,index) in everyList" 
+                                :key="index"
+                                @click="toggle(item.id)"
+                                ><img :src="item.coverImgUrl" alt="">
+                            </div>
+                        </div>
                     </van-swipe-item>
-                    <van-swipe-item>2</van-swipe-item>
-                    <van-swipe-item>3</van-swipe-item>
-                    <van-swipe-item>4</van-swipe-item>
+                    <van-swipe-item>精选3</van-swipe-item>
+                    <van-swipe-item>精选4</van-swipe-item>
+                    <van-swipe-item>精选3</van-swipe-item>
+                    <van-swipe-item>精选4</van-swipe-item>
+                    <van-swipe-item>精选3</van-swipe-item>
+                    <van-swipe-item>精选4</van-swipe-item>
                 </van-swipe>
-                 
-            </div>
-        </div>
+                
+            </van-swipe-item>
+            <van-swipe-item>2</van-swipe-item>
+            <van-swipe-item>3</van-swipe-item>
+        </van-swipe>
     </div>
 </template>
 
@@ -205,8 +223,10 @@
         display: flex;
         flex-direction:column;
         padding:0 10px;
+        background-color: #eaecf6;
     }
     .muen{
+        width: 100%;
         display: flex;
         .header{
             width:100%;
@@ -214,8 +234,8 @@
             display: flex;
             align-items: center;
             .img{
-                width:30px;
-                height:30px;
+                width:28px;
+                height:28px;
                 img{
                     width:100%;
                     height:100%;
@@ -226,6 +246,7 @@
                 display: flex;
                 overflow-x:auto;
                 padding:0 8px;
+                font-size: 0.5rem;
                 &::-webkit-scrollbar{height:0px}
                 p{
                     width:50px;
@@ -235,176 +256,213 @@
                     line-height: 25px;
                     font-family: "黑体";
                     margin:0 10px;
+                    color: #808080;
                     &.active{
                         border-bottom: 2px solid red;
+                        color: black;
                     }
                 }
             }
         }
     }
-    .content{
+    .swiperA{
+        width: 100%;
         flex:1;
         overflow-y:auto;
-        .swiper{
-            width:100%;
-            height:100%;
-            .my-swipe{
-                width:100%;
-                height:100%;
+        .van-swipe-item{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        header{
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            &::-webkit-scrollbar{height:0px};
+            transition: 1s;
+            >p{
+                flex-shrink: 0;
+                font-size: 14px;
+                padding: 4px 10px;
+                display: flex;
+                align-items: center;
+                color: #808080;
+                &.active{
+                    color: black;
+                    background-color: #d6d2d2;
+                    border-radius: 50px
+                }
+            }
+        }
+        .swiperB{
+            flex: 1;
+            .music{
+                height: 100%;
                 overflow-y: auto;
-                .van-swipe-item {
-                    height:100%;
-                    background-color: #e1f3a3;
-                    display: flex;
-                    flex-direction: column;
-                       header{
-                            height:40px;
-                            display: flex;
-                            overflow-x:auto;
-                            align-items: center;
-                            &::-webkit-scrollbar{height:0px}
-                            p{
-                                height:25px;
-                                line-height: 25px;
-                                padding:0 10px; 
-                                flex-shrink: 0;
-                                font-size: 14px;
-                                &.active{
-                                    border-radius: 15px;
-                                    background: #eee;
-                                }
-                            }
-                        }
-                        .center{
-                            flex:1;
-                            background: paleturquoise;
-                            display: flex;
-                            flex-direction: column;
-                            overflow-y:auto;
-                            .recommend{
-                                height:30%;
-                                margin-top: 15px;
-                                display: flex;
-                                flex-direction: column;
-                                .list{
-                                    margin-top:10px;
-                                    overflow-x: auto;
-                                    display: flex;
-                                    .list-item{
-                                        width:100px;
-                                        height:100px;
-
-                                        margin-right:15px;
-                                        img{
-                                            width:100%;
-                                            height:100%;
-                                            border-radius: 15px;
-                                        }
-                                    }
-                                }
-                            }
-                            .official{
-                                margin-top:25px;
-                                flex:1;
-                                display: flex;
-                                flex-direction: column;
-                                background: palegreen;
-                                .offtitle{
-                                    display: flex;
-                                    img{
-                                        width:20px;
-                                        height:20px;
-                                    }
-                                }
-                                .offlist{
-                                    margin-top: 10px;
-                                   overflow: hidden;
-                                   overflow-y: auto;
-                                   .offitem{
-                                    height:150px;
-                                    border-radius: 10px;
-                                    background: #fff;
-                                    padding:0 10px;
-                                    display: flex;
-                                    flex-direction: column;
-                                    .title{
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: space-between;
-                                        margin:10px 0;
-                                        .update{
-                                            font-size: 13px;
-                                            color: #808080;
-                                        }
-                                    }
-                                    .hotList{
-                                        display: flex;
-                                        img{
-                                            width:100px;
-                                            height:100px;
-                                        }
-                                        ul{
-                                            flex:1;
-                                            margin-left: 10px;
-                                            height:100%;
-                                            background: #e1f3a3;
-                                            li{
-                                                height:25px;
-                                                background: pink;
-                                                margin-top:5px 0;
-                                                display: flex;
-                                                align-items: center;
-                                                justify-content: space-between;
-                                                name{
-                                                    flex:1;
-                                                }
-                                                .differ{
-                                                    width:30px;
-                                                    background: burlywood;
-                                                    text-align: center;
-                                                }
-                                            }
-                                        }
-                                    }
-                                   }
-                                }
-                            }
-                        }
+                &::-webkit-scrollbar{width:0px}; 
+            }
+            .recommended{
+                padding: 5px 0; 
+                font-size: 20px;
+                font-weight: bold;
+                margin-top: 10px;
+                width: 100%;
+            }
+            .img{
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                >div{
+                    width: 100px;
+                    height: 100px;
+                    background-color: #808080;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    >img{
+                        width: 100%;
+                        height: 100%;
                     }
                 }
             }
-            // 精选
-            .selected{
+            .authority{
+                width: 100%;
+                display: flex;
+                margin-top: 10px;
+                align-items: center;
+                >div{
+                    width: 26px;
+                    height: 26px;
+                    margin-right: 5px;
+                    >img{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                >p{
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+            }
+            .list{
+                width: 100%;
                 display: flex;
                 flex-direction: column;
-                padding:0 10px;
-                h3{
-                        margin:10px 0;
-                        display: flex;
-                        align-items: center;
-                        div{
-                            font-size: 13px;
-                            background: #bdbcbc;
-                            border-radius: 15px;
-                            padding:0 10px;
-                            margin:0 10px;
-                        }
-                    }
-                .selectItem{
+                padding: 10px 15px;
+                background-color: #fff;
+                border-radius: 10px;
+                margin-top: 10px;
+                .name{
                     display: flex;
-                    flex-wrap: nowrap;
-                    flex-shrink: 0;
-                    .every{
-                        width:100px;
-                        height:100px;
-                        background: rgb(83, 159, 159);
-                        border-radius: 10px;
+                    justify-content: space-between;
+                    align-items: center;
+                    .nameA{
+                        font-size: 22px;
+                        font-weight: bold;
+                        width: 60%;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+                    .nameB{
+                        font-size: 16px;
+                        color: #aaa7a7;
                     }
                 }
-
+                .text{
+                    width: 100%;
+                    display: flex;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                    .textImg{
+                        width: 70px;
+                        height: 70px;
+                        border-radius: 10px;
+                        overflow: hidden;
+                        background-color: #808080;   
+                        >img{
+                            width: 100%;
+                            height: 100%;
+                        }                     
+                    }
+                    .textList{
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        margin-left: 20px;
+                        >div{
+                            display: flex;
+                            flex: 1;
+                            align-items: center;
+                            justify-content: space-between;
+                            .p1{
+                                font-weight: bold;
+                                font-size: 16px;
+                            }
+                            .p{
+                                flex: 1;
+                                display: flex;
+                                margin-left: 5px;
+                                padding-right: 20px;
+                                overflow: hidden;
+                                .p2{
+                                    color: black;
+                                    font-size: 16px;
+                                    margin-left: 5px;
+                                    overflow: hidden;
+                                    white-space: nowrap;
+                                    text-overflow: ellipsis;
+                                }   
+                                .p3{
+                                    color: #ccc;
+                                    font-size: 16px;
+                                    margin-left: 5px;
+                                    overflow: hidden;
+                                    white-space: nowrap;
+                                    text-overflow: ellipsis;
+                                }
+                            }
+                            >div{
+                                width: 20px;
+                                height: 20px;
+                                display: flex;
+                                align-items: center;
+                                .type{
+                                    width: 100%;
+                                    height: 100%;
+                                    color: #40C093;
+                                    font-size: 16px;
+                                }
+                                >img{
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        
+            .winnow{
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                >div{
+                    width: 100px;
+                    height: 100px;
+                    background-color: #808080;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    flex-shrink: 0;
+                    margin-left: 14px;
+                    margin-bottom: 10px;
+                    >img{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
         }
+    }
     
 </style>
 

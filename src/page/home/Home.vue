@@ -89,7 +89,7 @@
         height: 100vh;
         display: flex;
         flex-direction: column;
-
+        overflow: hidden;
         .home-main {
             flex: 1;
             width: 100vw;
