@@ -8,6 +8,7 @@ import MusicPlay from "@/page/home/musicPlay/MusicPlay.vue";
 import Community from "@/page/home/community/Community.vue";
 import Search from "@/page/search/Search.vue"
 import SongList from "@/page/home/songList/SongList.vue"
+import Login from "@/page/login/login.vue";
 
 Vue.use(VueRouter)
 
@@ -77,6 +78,15 @@ const routes = [
         path:'/search',
         name:'search',
         component: Search
+    }
+    ,
+    {
+        path:'/login',
+        name:'login',
+        component: Login,
+        meta: {
+            title: '登录'
+        },
     }
 ]
 

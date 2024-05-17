@@ -24,8 +24,8 @@
     }
 
     svg{
-        width: 1rem;
-        height: 1rem;
+        width: 0.4rem;
+        height: 0.4rem;
     }
 
 
